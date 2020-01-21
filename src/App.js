@@ -5,7 +5,7 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 import Home from './components/Home'
 import ProfilesContainer from './containers/ProfilesContainer'
-import List from './components/List'
+import ListShow from './components/ListShow'
 import NewList from './components/NewList'
 import EditList from './components/EditList'
 import ProfilePage from './components/ProfilePage'
@@ -29,6 +29,7 @@ class App extends React.Component {
         })
       })
   }
+  
 
 
   render() {
@@ -41,7 +42,7 @@ class App extends React.Component {
         <Route exact path="/home" render={(routerProps) => <Home {...routerProps} />} />
         <Route exact path="/profiles" render={(routerProps) => <ProfilesContainer {...routerProps} allProfiles={this.state.allProfiles} />} />
         <Route exact path="/profiles/:id" render={(routerProps) => <ProfilePage {...routerProps} allProfiles={this.state.allProfiles} />} />
-        <Route exact path="/profiles/1/list/1" render={(routerProps) => <List {...routerProps} />} /> {/*need to put two :ids in here! profile id and list id */}
+        <Route exact path="/profiles/1/list/1" render={(routerProps) => <ListShow {...routerProps} />} /> {/*need to put two :ids in here! profile id and list id */}
         <Route exact path="/profiles/1/list/new" render={(routerProps) => <NewList {...routerProps} />} /> {/*need to put :id in here!  */}
         <Route exact path="/profiles/1/list/1/edit" render={(routerProps) => <EditList {...routerProps} />} /> {/*need to put two :ids in here! profile id and list id */}
       </div>

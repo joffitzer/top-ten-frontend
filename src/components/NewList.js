@@ -1,10 +1,14 @@
 import React from 'react';
+import NewListContainer from '../containers/NewListContainer'
 
 class NewList extends React.Component {
     state = {
         movies: [],
         searchTerm: '',
-        isLoaded: false
+        isLoaded: false,
+        movieList: [],
+        listName: '',
+        list: null
     }
 
 
@@ -20,14 +24,59 @@ class NewList extends React.Component {
         })
     }
 
+    handleNameSave = (e) => {
+        e.preventDefault();
+        fetch ("http://localhost:3000/api/v1/lists", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            body: JSON.stringify({listName: this.state.listName, profileId: 5})
+          })
+          .then(response => response.json())
+          .then(resp => 
+            this.setState({
+              list: resp,
+              listName: ''
+          }))
+    }
+
+    handleListSave = (e, listItemArray) => {
+        e.preventDefault();
+        console.log(listItemArray)
+        listItemArray.map ( listItem => 
+            fetch ("http://localhost:3000/api/v1/items", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                body: JSON.stringify({
+                    listId: this.state.list.id,
+                    title: listItem.props.movie.Title, 
+                    imageUrl: listItem.props.movie.Poster, 
+                    year: listItem.props.movie.Year,
+                    rank: listItem.props.movie.index+1
+                })
+              })
+              .then(response => response.json())
+              .then( this.props.history.push(`/profiles/1/lists/${this.state.list.id}`)
+            )
+        )
+        
+    }
+
     handleChange = (e) => {
         this.setState({
             searchTerm: e.target.value 
         })
     }
 
+    handleNameChange = (e) => {
+        this.setState({
+            listName: e.target.value 
+        })
+    }
+
     handleAddToList = (movieObj) => {
-        
+        this.setState({
+            movieList: [...this.state.movieList, movieObj]
+        })
     }
 
     render() {
@@ -50,14 +99,28 @@ class NewList extends React.Component {
 
         return(
             <div>
-                <form onSubmit={this.handleSearch}>
+                {this.state.list 
+                ?   <form onSubmit={this.handleSearch}>
+                        <label>
+                        Movie Title:
+                        <input type="text" value={this.state.searchTerm} onChange={this.handleChange} />
+                        </label>
+                        <input type="submit" value="Submit" />
+                    </form>
+                :   
+                    <form onSubmit={this.handleNameSave}>
                     <label>
-                    Movie Title:
-                    <input type="text" value={this.state.searchTerm} onChange={this.handleChange} />
+                    List Name:
+                    <input type="text" value={this.state.listName} onChange={this.handleNameChange} />
                     </label>
                     <input type="submit" value="Submit" />
-                </form>
+                </form> 
+            }
                 {movieSearchResultsArray}
+                <div>
+                    <h1>{this.state.list ? this.state.list.listName : "Add a name for your list" }</h1>
+                    <NewListContainer movieList={this.state.movieList} handleListSave={this.handleListSave}/>
+                </div>
             </div>
         )
     }
