@@ -18,9 +18,15 @@ class ListShow extends React.Component {
           })
     }    
 
+    handleEditList = () => {
+        console.log(this.state.allItems)
+    }
+
+    // let filteredItems = items.filter( item => item.listId === this.props.selectedList.id )
+
     render() {
 
-        console.log(this.state.allItems)
+        console.log(this.props)
 
         let listShowArray = this.state.allItems.map(itemObj => {
             return <ListItemShow key={itemObj.id} movie={itemObj}/>
@@ -28,6 +34,7 @@ class ListShow extends React.Component {
 
         return(
             <div>
+                <button onClick={this.handleEditList}>Edit List</button>
                 {listShowArray}
             </div>
         )

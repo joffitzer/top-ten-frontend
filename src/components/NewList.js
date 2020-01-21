@@ -21,7 +21,8 @@ class NewList extends React.Component {
                     movies: movieObj,
                     isLoaded: true
                 })
-        })
+            }
+        )
     }
 
     handleNameSave = (e) => {
@@ -41,8 +42,7 @@ class NewList extends React.Component {
 
     handleListSave = (e, listItemArray) => {
         e.preventDefault();
-        console.log(listItemArray)
-        listItemArray.map ( listItem => 
+        listItemArray.map ( (listItem, index) => 
             fetch ("http://localhost:3000/api/v1/items", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -51,15 +51,15 @@ class NewList extends React.Component {
                     title: listItem.props.movie.Title, 
                     imageUrl: listItem.props.movie.Poster, 
                     year: listItem.props.movie.Year,
-                    rank: listItem.props.movie.index+1
+                    rank: index + 1
                 })
               })
               .then(response => response.json())
-              .then( this.props.history.push(`/profiles/1/lists/${this.state.list.id}`)
-            )
+              .then(res => console.log(res))
         )
-        
     }
+
+    // .then( this.props.history.push(`/profiles/1/lists/${this.state.list.id}`)
 
     handleChange = (e) => {
         this.setState({

@@ -27,11 +27,18 @@ class Home extends React.Component {
         })
     }
 
+    deleteList = (e, list) => {
+        e.preventDefault();
+        fetch (`http://localhost:3000/api/v1/lists/${list.id}`, {
+            method: 'DELETE'
+        }).then(this.setState({
+            allLists: this.state.allLists.filter(listObj => listObj.id !== list.id)
+        }))
+    }
   
     render() {
-        console.log(this.state.listToShow)
         let listArray = this.state.allLists.map(listObj => {
-            return <ListCard key={listObj.id} list={listObj} handleViewListClick={this.handleViewListClick}/>
+            return <ListCard key={listObj.id} list={listObj} deleteList={this.deleteList} handleViewListClick={this.handleViewListClick}/>
         } )
         return(
             <div>
