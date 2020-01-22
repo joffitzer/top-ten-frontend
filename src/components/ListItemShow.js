@@ -8,19 +8,21 @@ import Card from 'react-bootstrap/Card'
 
 class ListItemShow extends React.Component {
     render() {
+        console.log(this.props)
         return(
             <Card style={{ width: '36rem' }}>
                 <Card.Body>
                     <Row>
                         <Col xs lg="1">                
-                            <h1>{this.props.movie.rank}</h1>
+                            <h1>{this.props.movie.Rank}</h1>
                         </Col>
                         <Col lg="2">
-                            <Image src={this.props.movie.imageUrl} alt={this.props.movie.title} width="75" thumbnail/>
+                            <Image src={this.props.movie.Poster} alt={this.props.movie.Title} width="75" thumbnail/>
                         </Col>
                         <Col>
-                            <h2> {this.props.movie.title}</h2>
-                            <h5> {this.props.movie.year}</h5>
+                            <h2> {this.props.movie.Title}</h2>
+                            <h5> {this.props.movie.Year}</h5>
+
                         </Col>
                     </Row>
                 </Card.Body>

@@ -30,7 +30,7 @@ class NewList extends React.Component {
         fetch ("http://localhost:3000/api/v1/lists", {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-            body: JSON.stringify({listName: this.state.listName, profileId: 5})
+            body: JSON.stringify({listName: this.state.listName, profileId: 1})
           })
           .then(response => response.json())
           .then(resp => 
@@ -42,16 +42,17 @@ class NewList extends React.Component {
 
     handleListSave = (e, listItemArray) => {
         e.preventDefault();
+        console.log(listItemArray)
         listItemArray.map ( (listItem, index) => 
             fetch ("http://localhost:3000/api/v1/items", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
                 body: JSON.stringify({
                     listId: this.state.list.id,
-                    title: listItem.props.movie.Title, 
-                    imageUrl: listItem.props.movie.Poster, 
-                    year: listItem.props.movie.Year,
-                    rank: index + 1
+                    Title: listItem.props.movie.Title, 
+                    Poster: listItem.props.movie.Poster, 
+                    Year: listItem.props.movie.Year,
+                    Rank: index + 1
                 })
               })
               .then(response => response.json())
@@ -109,12 +110,12 @@ class NewList extends React.Component {
                     </form>
                 :   
                     <form onSubmit={this.handleNameSave}>
-                    <label>
-                    List Name:
-                    <input type="text" value={this.state.listName} onChange={this.handleNameChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form> 
+                        <label>
+                        List Name:
+                        <input type="text" value={this.state.listName} onChange={this.handleNameChange} />
+                        </label>
+                        <input type="submit" value="Submit" />
+                    </form> 
             }
                 {movieSearchResultsArray}
                 <div>
