@@ -53,8 +53,27 @@ class ListShow extends React.Component {
                   })
                   .then(response => response.json())
                   .then(res => console.log(res))
+            } else {
+                fetch (`http://localhost:3000/api/v1/items/${listItem.id}`, {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        Rank: index + 1
+                    })
+                  })
+                  .then(response => response.json())
+                  .then(res => console.log(res))
             }}
         )
+    }
+
+    handleDeleteItem = (movie) => {
+        console.log("movie to delete", movie)
+        fetch (`http://localhost:3000/api/v1/items/${movie.id}`, {
+            method: 'DELETE'
+        }).then(this.setState({
+            movieList: [...this.state.movieList].filter(movieObj => movieObj.id !== movie.id)
+        }))
     }
 
     // let filteredItems = items.filter( item => item.listId === this.props.selectedList.id )
@@ -70,6 +89,8 @@ class ListShow extends React.Component {
         let listShowArray = sortedListShowArray.map(itemObj => {
             return <ListItemShow key={itemObj.id} 
             movie={itemObj}
+            showEdit={this.state.showEdit}
+            handleDeleteItem={this.handleDeleteItem}
             />
         })
 

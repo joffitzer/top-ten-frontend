@@ -10,10 +10,14 @@ import Card from 'react-bootstrap/Card'
 
 class ListItem extends React.Component {
     render() {
+        console.log(this.props)
         return(
             <Card>
                 <Container>
                     <Row>
+                        <Col lg="2">
+                            <h1>{this.props.rank + 1} </h1>
+                        </Col>
                         <Col xs lg="2">
                             <Image src={this.props.movie.Poster} alt={this.props.movie.Title} thumbnail/>
                         </Col>

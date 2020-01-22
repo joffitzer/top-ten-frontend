@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 const NavBar = () => {
     return(
         <Navbar bg="dark" variant="dark">
-            <Navbar.Brand href='/home'>Ze NavBar</Navbar.Brand>
+            <Navbar.Brand href='/home'>ListMaker</Navbar.Brand>
             <Nav className="mr-auto">
             <Nav.Link href='/profiles/1'>My Profile</Nav.Link>
             <Nav.Link href='/profiles'>Profiles</Nav.Link>

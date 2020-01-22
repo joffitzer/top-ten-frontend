@@ -6,13 +6,12 @@ class NewListContainer extends React.Component {
 
     render() {
 
-        let listArray = this.props.movieList.map(movieObj => {
-            return <ListItem movie={movieObj} />
+        let listArray = this.props.movieList.map((movieObj, index) => {
+            return <ListItem movie={movieObj} rank={index} />
         })
 
         return(
             <div>
-                <h1>New List Container</h1>
                 {listArray}
                 <button onClick={(e) => this.props.handleListSave(e, listArray)}>Save this List</button>
             </div>

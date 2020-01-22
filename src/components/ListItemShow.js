@@ -1,12 +1,12 @@
 import React from 'react';
 import Image from 'react-bootstrap/Image'
-import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 
 
 class ListItemShow extends React.Component {
+
     render() {
         console.log(this.props)
         return(
@@ -22,7 +22,11 @@ class ListItemShow extends React.Component {
                         <Col>
                             <h2> {this.props.movie.Title}</h2>
                             <h5> {this.props.movie.Year}</h5>
-
+                        </Col>
+                        <Col>
+                            {this.props.showEdit ?
+                                <button onClick={() => this.props.handleDeleteItem(this.props.movie)}>Delete this movie from the list</button>
+                                : "" }
                         </Col>
                     </Row>
                 </Card.Body>
