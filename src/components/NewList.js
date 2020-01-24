@@ -1,5 +1,8 @@
 import React from 'react';
 import NewListContainer from '../containers/NewListContainer'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 class NewList extends React.Component {
     state = {
@@ -14,15 +17,20 @@ class NewList extends React.Component {
 
     handleSearch = (e) => {
         e.preventDefault();
-        fetch (`http://www.omdbapi.com/?apikey=d47e0231&s=${this.state.searchTerm}`)
-            .then(res => res.json())
-            .then(movieObj => {
-                this.setState({
-                    movies: movieObj,
-                    isLoaded: true
-                })
-            }
-        )
+        if (this.state.searchTerm.length > 2) {
+            fetch (`http://www.omdbapi.com/?apikey=d47e0231&s=${this.state.searchTerm}`)
+                .then(res => res.json())
+                .then(movieObj => {
+                    this.setState({
+                        movies: movieObj,
+                        isLoaded: true
+                    })
+                }
+            )
+
+        } else {
+            alert("Searches must be more than 2 characters long")
+        }
     }
 
     handleNameSave = (e) => {
@@ -30,7 +38,7 @@ class NewList extends React.Component {
         fetch ("http://localhost:3000/api/v1/lists", {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-            body: JSON.stringify({listName: this.state.listName, profileId: 5})
+            body: JSON.stringify({listName: this.state.listName, profileId: 1})
           })
           .then(response => response.json())
           .then(resp => 
@@ -42,20 +50,21 @@ class NewList extends React.Component {
 
     handleListSave = (e, listItemArray) => {
         e.preventDefault();
+        console.log(listItemArray)
         listItemArray.map ( (listItem, index) => 
             fetch ("http://localhost:3000/api/v1/items", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
                 body: JSON.stringify({
                     listId: this.state.list.id,
-                    title: listItem.props.movie.Title, 
-                    imageUrl: listItem.props.movie.Poster, 
-                    year: listItem.props.movie.Year,
-                    rank: index + 1
+                    Title: listItem.props.movie.Title, 
+                    Poster: listItem.props.movie.Poster, 
+                    Year: listItem.props.movie.Year,
+                    Rank: index + 1
                 })
               })
               .then(response => response.json())
-              .then(res => console.log(res))
+              .then()
         )
     }
 
@@ -75,7 +84,10 @@ class NewList extends React.Component {
 
     handleAddToList = (movieObj) => {
         this.setState({
-            movieList: [...this.state.movieList, movieObj]
+            movieList: [...this.state.movieList, movieObj],
+            searchTerm: "",
+            movies: [],
+            isLoaded: false
         })
     }
 
@@ -85,43 +97,56 @@ class NewList extends React.Component {
 
         let movieSearchResultsArray
 
-        if (this.state.isLoaded) {
-            movieSearchResultsArray = movieSearchResults.map(movieObj => {
-                return (
-                    <div>
-                        <h5>{movieObj.Title}</h5>
-                        <img src={movieObj.Poster} alt={movieObj.Title} width="42"/>
-                        <button onClick={() => this.handleAddToList(movieObj)}>Add to List</button>
-                    </div>
-                )
-            })
+        if (this.state.isLoaded) { 
+            if (!!movieSearchResults){
+                movieSearchResultsArray = movieSearchResults.map(movieObj => {
+                    return (
+                        <div>
+                            <h5>{movieObj.Title}</h5>
+                            <img src={movieObj.Poster} alt={movieObj.Title} width="42"/>
+                            <button onClick={() => this.handleAddToList(movieObj)}>Add to List</button>
+                        </div>
+                    )
+                })
+            } else {
+                alert("No results found, please try again!")
+                this.setState({
+                    isLoaded: false
+                }) 
+            }
         }
 
         return(
-            <div>
-                {this.state.list 
-                ?   <form onSubmit={this.handleSearch}>
-                        <label>
-                        Movie Title:
-                        <input type="text" value={this.state.searchTerm} onChange={this.handleChange} />
-                        </label>
-                        <input type="submit" value="Submit" />
-                    </form>
-                :   
-                    <form onSubmit={this.handleNameSave}>
-                    <label>
-                    List Name:
-                    <input type="text" value={this.state.listName} onChange={this.handleNameChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form> 
-            }
-                {movieSearchResultsArray}
-                <div>
-                    <h1>{this.state.list ? this.state.list.listName : "Add a name for your list" }</h1>
-                    <NewListContainer movieList={this.state.movieList} handleListSave={this.handleListSave}/>
-                </div>
-            </div>
+            <Container>
+                <Row>
+                    <Col>
+                        {this.state.list 
+                        ?   <form onSubmit={this.handleSearch}>
+                                <label>
+                                Movie Title:
+                                <input type="text" value={this.state.searchTerm} onChange={this.handleChange} />
+                                </label>
+                                <input type="submit" value="Submit" />
+                            </form>
+                        :   
+                            <form onSubmit={this.handleNameSave}>
+                                <label>
+                                List Name:
+                                <input type="text" value={this.state.listName} onChange={this.handleNameChange} />
+                                </label>
+                                <input type="submit" value="Submit" />
+                            </form> 
+                        }
+                        {movieSearchResultsArray}
+                    </Col>
+                    <Col>
+                        <div>
+                            <h1>{this.state.list ? this.state.list.listName : "Your New List" }</h1>
+                            <NewListContainer movieList={this.state.movieList} handleListSave={this.handleListSave}/>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }

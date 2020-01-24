@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'react-bootstrap/Image'
+
 
 class ProfilePage extends React.Component {
 
@@ -9,9 +11,9 @@ class ProfilePage extends React.Component {
     renderProfileInfo = (selectedProfile) => {
         return(
             <div>
-                ONE SINGLE Profile Show Page
-                <h1>This is the profile page for: {selectedProfile.name}</h1>
-                <h1>Username: {selectedProfile.username}</h1>
+                 <Image  src={selectedProfile.imageUrl} roundedCircle width="200" height="200"/>
+                <h1>{selectedProfile.name}</h1>
+                <h5>Username: {selectedProfile.username}</h5>
             </div>
         )
     }
