@@ -1,11 +1,14 @@
 import React from 'react'
 import ListCard from './ListCard'
 import ListShow from './ListShow'
+import { connect as cnx } from 'react-redux';
+import { listLoader } from '../actionCreators'
 
 
 class Home extends React.Component {
+
     state = {
-        allLists: [],
+        // allLists: [],
         listToShow: null,
         isListSelected: false,
     }
@@ -14,9 +17,7 @@ class Home extends React.Component {
         fetch ('http://localhost:3000/api/v1/lists')
           .then(res => res.json())
           .then(lists => {
-            this.setState({
-              allLists: lists
-            })
+            this.props.listLoader(lists)
           })
       }
 
@@ -37,7 +38,7 @@ class Home extends React.Component {
     }
   
     render() {
-        let listArray = this.state.allLists.map(listObj => {
+        let listArray = this.props.allLists.map(listObj => {
             return <ListCard key={listObj.id} list={listObj} deleteList={this.deleteList} handleViewListClick={this.handleViewListClick}/>
         } )
         return(
@@ -48,4 +49,18 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+    let { allLists } = state;
+  
+    return {
+      allLists
+    }
+  }
+  
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      listLoader: (lists) => dispatch(listLoader(lists))
+    }
+  }
+
+export default cnx(mapStateToProps, mapDispatchToProps)(Home);
